@@ -10,8 +10,7 @@ const bot = new TelegramBot(token, { polling: true });
 const chatState = {};
 const selectedTimes = {};
 
-console.log(selectedTimes);
-// const myId = 486008562;
+const myId = 392593561;
 
 const start = () => {
   bot.on("message", async (msg) => {
@@ -27,7 +26,46 @@ const start = () => {
       );
       return bot.sendMessage(
         chatId,
-        `${username}, Ласкаво просимо в телеграм-бот для персональних тренувань! Щоб дізнатись інформацію про тренування обери команду /info. Щоб записатися на тренування обери команду /addTraining`
+        `${username}, Ласкаво просимо в телеграм-бот для персональних тренувань! \nЩоб записатися на тренування обери команду /addTraining \nЩоб дізнатись інформацію про тренування обери команду /info  \nЩоб дізнатись інформацію про тренера обери команду /coachInfo \nВідкрити меню /menu`
+      );
+    }
+
+    // ---------------- * MENU BOT ---------------
+
+    if (msg.text == "/menu") {
+      await bot.sendMessage(msg.chat.id, `Меню`, {
+        reply_markup: {
+          keyboard: [
+            ["Загальна інформація", "Тренер"],
+            ["Записатись на тренування", "Контактна інформація"],
+          ],
+        },
+      });
+    }
+
+    // ---------------- * INFO ---------------------
+
+    if (text === "/info") {
+      const address = "м. Черкаси, вулиця Вʼячеслава Чорновола, 49";
+      const phoneNumber = "38000000000";
+      const encryptedUrl = Buffer.from(
+        "https://maps.app.goo.gl/pLkEe75VmsjmmUNx8"
+      ).toString("base64");
+
+      const message = `Дорогий учасник тренувань! Нагадуємо вам про необхідність взяти з собою змінне взуття. Якщо у вас є боксерське або борцівське взуття, воно вам буде найбільш зручним, але також можна тренуватися у босоніж. Проте, важливо пам'ятати, що взимку босоніж буде холодно, тому рекомендуємо взяти з собою змінне спортивне взуття, а також не забувайте про воду. Телефон для зв'язку з тренером: ${phoneNumber}. Адреса за якою проходять тренування: [${address}](https://maps.app.goo.gl/pLkEe75VmsjmmUNx8) . Бажаємо продуктивних та комфортних тренувань! Для того, щоб записатись на тренування обери команду наступну команду /addTraining`;
+
+      return bot.sendMessage(chatId, message, {
+        parse_mode: "Markdown",
+        disable_web_page_preview: false,
+      });
+    }
+
+    // ---------------- * COACH INFO ---------------------
+
+    if (text === "/coachInfo") {
+      return bot.sendMessage(
+        chatId,
+        "Тренер: Майдаков Дмитро, майстер спорту України з боксу, чемпіон Європи та багаторазовий чемпіон України. Має тренерську освіту та значний досвід у тренерській діяльності. Працює як з дорослими, так і з дітьми."
       );
     }
 
@@ -46,7 +84,7 @@ const start = () => {
       const currentDate = moment().startOf("week").add(1, "week");
 
       for (let i = 0; i < daysInMonth; i++) {
-        const dateText = currentDate.format("ddd DD.MM");
+        const dateText = currentDate.format("DD.MM");
         const callbackData = currentDate
           .format("ddd DD.MM")
           .replace(/\s+/g, "");
@@ -156,14 +194,13 @@ const start = () => {
           // Отправка сообщения пользователю
           await bot.sendMessage(
             chatId,
-            `Ви обрали: ${newSelectedDate} ${selectedTime}`
+            `Ви обрали: ${newSelectedDate} ${selectedTime}. \nДякуємо, ваш запис прийнято.`
           );
 
           // const myId = 392593561;
-          const myId = 486008562;
+          // const myId = 486008562;
 
           try {
-            // Отправка сообщения вам напрямую
             await bot.sendMessage(
               myId,
               `${username} (${firstName}) записався на тренування у ${newSelectedDate} о(б) ${selectedTime}`
